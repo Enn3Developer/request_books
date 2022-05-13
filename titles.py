@@ -31,12 +31,17 @@ requests = []
 
 
 async def check_natively(browser: WebDriver):
-    with open("titles.txt", 'r') as file:
+    with open("titles.txt", "r") as file:
         for line in file.read().splitlines():
             if line == "":
                 continue
-            split = line.split(';')
+            split = line.split(";")
             title = Title(split[0], split[1])
+
+            # skip everything if the user duplicated the title
+            # we don't want to flood Natively with double requests
+            if title in searching_amazon:
+                continue
 
             user_response = keyboard.ask_user()
             browser.get(f"{natively_query}{parse.quote(title.name)}")
@@ -67,10 +72,10 @@ async def check_amazon(browser: WebDriver):
 
 
 async def request_on_natively(browser: WebDriver):
-    file = open("cred.txt", 'r')
+    file = open("cred.txt", "r")
     line = file.read()
     file.close()
-    cred = line.split(';')
+    cred = line.split(";")
     for title in requests:
         browser.get(f"{natively_request}")
         if "Login to your account" in browser.page_source:
@@ -96,7 +101,9 @@ async def request_on_natively(browser: WebDriver):
 
         elements = browser.find_elements_by_class_name("form-control")
         elements[0].send_keys(title.link)
-        Select(elements[1]).select_by_value("manga" if title.type_format == "m" else "light_novel")
+        Select(elements[1]).select_by_value(
+            "manga" if title.type_format == "m" else "light_novel"
+        )
         Select(elements[3]).select_by_value("25" if title.type_format == "m" else "30")
 
         for btn in browser.find_elements_by_class_name("btn-info"):
