@@ -62,6 +62,7 @@ async def check_natively(browser: WebDriver):
 async def check_amazon(browser: WebDriver):
     for title in searching_amazon:
         browser.get(f"{amazon_query}{parse.quote(title.name)}")
+        print(title.name)
         user_response = await keyboard.ask_user()
 
         if not user_response:
