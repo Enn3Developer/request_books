@@ -2,3 +2,4 @@ venv
 .idea
 *.txt
 __pycache__
+geckodriver.log
