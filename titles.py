@@ -84,19 +84,20 @@ async def request_on_natively(browser: WebDriver):
                 browser.find_element_by_class_name("t-acceptAllButton").click()
             except NoSuchElementException:
                 pass
+            await sleep(10)
             browser.find_element_by_id("formEmail").send_keys(cred[0])
             browser.find_element_by_id("formPassword").send_keys(cred[1])
             for btn in browser.find_elements_by_class_name("btn-primary"):
                 if btn.text == "Login":
                     btn.click()
+                    await sleep(10)
 
-        await sleep(1)
+        await sleep(2)
         try:
             browser.find_element_by_class_name("t-acceptAllButton").click()
+            await sleep(10)
         except NoSuchElementException:
             pass
-        finally:
-            await sleep(1)
         await sleep(1)
         browser.find_element_by_id("series-check").click()
 
